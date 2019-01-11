@@ -1,4 +1,3 @@
-# pylint: disable=C0330
 from datetime import datetime
 
 
@@ -25,7 +24,9 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = f"{self.created_at.strftime('%Y-%m-%d')} {self.description}"
+        minimal_text = (
+            f"{self.created_at.strftime('%Y-%m-%d')} {self.description}"
+        )
         optional_suffixes = ""
 
         if self.done:

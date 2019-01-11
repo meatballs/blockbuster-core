@@ -1,4 +1,3 @@
-# pylint: disable=C0111
 from blockbuster_core import __version__
 
 
