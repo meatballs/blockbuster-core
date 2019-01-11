@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from blockbuster_core import DATE_FORMAT
+
 
 class Task:
     def __init__(
@@ -25,7 +27,7 @@ class Task:
     def __str__(self):
         optional_prefixes = ""
         minimal_text = (
-            f"{self.created_at.strftime('%Y-%m-%d')} {self.description}"
+            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
         )
         optional_suffixes = ""
 
@@ -36,7 +38,7 @@ class Task:
             optional_prefixes += f"({self.priority}) "
 
         if self.completed_at:
-            optional_prefixes += f"{self.completed_at.strftime('%Y-%m-%d')} "
+            optional_prefixes += f"{self.completed_at.strftime(DATE_FORMAT)} "
 
         for project in self.projects:
             optional_suffixes += f" +{project}"
