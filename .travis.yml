@@ -9,6 +9,7 @@ install:
 script:
   - isort --recursive --check-only .
   - black --check .
+  - doc8 --quiet docs
   - tox
   - coverage report -m
   - cd docs; make clean; make html
