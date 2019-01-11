@@ -13,9 +13,7 @@ from hypothesis.strategies import (
 
 from blockbuster_core.model import Task
 
-ALPHABET = characters(
-    blacklist_characters=("'"), blacklist_categories=("Cc", "Cs")
-)
+ALPHABET = characters(blacklist_characters=("'"), blacklist_categories=("Cc", "Cs"))
 
 
 def minimal_text(created_at, description):
@@ -33,14 +31,7 @@ def minimal_text(created_at, description):
     tags=dictionaries(keys=text(min_size=1), values=text(min_size=1)),
 )
 def test_repr(
-    description,
-    done,
-    priority,
-    completed_at,
-    created_at,
-    projects,
-    contexts,
-    tags,
+    description, done, priority, completed_at, created_at, projects, contexts, tags
 ):
     task = Task(
         description=description,
@@ -91,9 +82,7 @@ def test_done_string(done, priority, completed_at, created_at, description):
     created_at=dates(),
     description=text(min_size=1, alphabet=ALPHABET),
 )
-def test_priority_string(
-    done, priority, completed_at, created_at, description
-):
+def test_priority_string(done, priority, completed_at, created_at, description):
     task = Task(
         done=done,
         priority=priority,
@@ -113,9 +102,7 @@ def test_priority_string(
     created_at=dates(),
     description=text(min_size=1, alphabet=ALPHABET),
 )
-def test_completed_at_string(
-    done, priority, completed_at, created_at, description
-):
+def test_completed_at_string(done, priority, completed_at, created_at, description):
     task = Task(
         done=done,
         priority=priority,
