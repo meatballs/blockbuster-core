@@ -1,19 +1,12 @@
 from datetime import datetime
 
 from hypothesis import given
-from hypothesis.strategies import (
-    booleans,
-    characters,
-    dates,
-    dictionaries,
-    lists,
-    sampled_from,
-    text,
-)
+from hypothesis.strategies import (booleans, characters, dates, dictionaries,
+                                   lists, sampled_from, text)
 
 from blockbuster_core.model import Task
 
-ALPHABET = characters(blacklist_characters=("'"), blacklist_categories=("Cc", "Cs"))
+ALPHABET = characters(blacklist_characters=('"'), blacklist_categories=("Cc", "Cs"))
 
 
 def minimal_text(created_at, description):

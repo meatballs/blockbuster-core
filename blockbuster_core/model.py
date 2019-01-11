@@ -26,9 +26,9 @@ class Task:
 
     def __repr__(self):
         result = "blockbuster_core.model.Task("
-        result += f"description='{self.description}', "
+        result += f'description="{self.description}", '
         result += f"done={self.done}, "
-        result += f"priority='{self.priority}', "
+        result += f'priority="{self.priority}", '
         result += f"completed_at={repr(self.completed_at)}, "
         result += f"created_at={repr(self.created_at)}, "
         result += f"projects={self.projects}, "
@@ -38,7 +38,9 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        minimal_text = (
+            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        )
         optional_suffixes = ""
 
         if self.done:
