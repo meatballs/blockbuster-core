@@ -24,6 +24,18 @@ class Task:
         self.contexts = contexts or []
         self.tags = tags or {}
 
+    def __repr__(self):
+        result = "blockbuster_core.model.Task("
+        result += f"description='{self.description}', "
+        result += f"done={self.done}, "
+        result += f"priority='{self.priority}', "
+        result += f"completed_at={repr(self.completed_at)}, "
+        result += f"created_at={repr(self.created_at)}, "
+        result += f"projects={self.projects}, "
+        result += f"contexts={self.contexts}, "
+        result += f"tags={self.tags})"
+        return result
+
     def __str__(self):
         optional_prefixes = ""
         minimal_text = (
@@ -41,10 +53,12 @@ class Task:
             optional_prefixes += f"{self.completed_at.strftime(DATE_FORMAT)} "
 
         for project in self.projects:
-            optional_suffixes += f" +{project}"
+            if project:
+                optional_suffixes += f" +{project}"
 
         for context in self.contexts:
-            optional_suffixes += f" @{context}"
+            if context:
+                optional_suffixes += f" @{context}"
 
         for key, value in self.tags.items():
             optional_suffixes += f" {key}:{value}"
