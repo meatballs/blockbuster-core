@@ -1,5 +1,6 @@
 from hypothesis import given
-from hypothesis.strategies import dates, text
+from hypothesis.strategies import dates
+from hypothesis.strategies import text
 
 from blockbuster_core.model import Task
 
