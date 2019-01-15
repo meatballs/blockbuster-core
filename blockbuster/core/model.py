@@ -1,9 +1,36 @@
+"""Classes to represent tasks and the events which cause them to change state.
+
+These classes have no dependencies on any other component of the blockbuster
+namespace.
+"""
+from abc import ABCMeta
 from datetime import datetime
 
 from blockbuster.core import DATE_FORMAT
 
 
 class Task:
+    """
+    Parameters
+    ----------
+    description:
+        Text to describe the task
+    done:
+        True if the task has been completed
+    priority:
+        By convention, a single upper case character to indicate priority level
+    completed_at:
+        The date on which the task was completed
+    created_at:
+        The date on which the task was created
+    projects:
+        A list of project tags (denoted by a + prefix in the text definition)
+    contexts:
+        A list of context tags (denoted by a @ prefix in the text definition)
+    tags:
+        A dict of user defined tag keys and values
+    """
+
     def __init__(
         self,
         description,
@@ -38,7 +65,9 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        minimal_text = (
+            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        )
         optional_suffixes = ""
 
         if self.done:
@@ -62,3 +91,26 @@ class Task:
             optional_suffixes += f" {key}:{value}"
 
         return optional_prefixes + minimal_text + optional_suffixes
+
+
+class Event:
+    __metaclass__ = ABCMeta
+
+    def __init__(self, tasks, file, prior_hash, new_hash):
+        self.occurred_at = datetime.now()
+        self.tasks = tasks
+        self.file_name = file
+        self.prior_hash = prior_hash
+        self.new_hash = new_hash
+
+
+class TasksAdded(Event):
+    event_type = f"{__name__}.{__qualname__}"
+
+
+class TasksUpdated(Event):
+    event_type = f"{__name__}.{__qualname__}"
+
+
+class TasksDeleted(Event):
+    event_type = f"{__name__}.{__qualname__}"
