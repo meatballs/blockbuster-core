@@ -7,6 +7,7 @@ from abc import ABCMeta
 from datetime import datetime
 
 from blockbuster.core import DATE_FORMAT
+from marshmallow import Schema, fields, pre_dump
 
 
 class Task:
@@ -65,9 +66,7 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = (
-            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
-        )
+        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
         optional_suffixes = ""
 
         if self.done:
@@ -93,24 +92,45 @@ class Task:
         return optional_prefixes + minimal_text + optional_suffixes
 
 
+class EventSchema(Schema):
+    event_type = fields.Str()
+    occurred_at = fields.DateTime()
+    tasks = fields.List(fields.Str())
+    file = fields.Str()
+    prior_hash = fields.Str()
+    new_hash = fields.Str()
+
+    @pre_dump
+    def add_event_type(self, item):
+        item.event_type = f"{__name__}.{item.__class__.__qualname__}"
+        return item
+
+
 class Event:
     __metaclass__ = ABCMeta
+    schema = EventSchema()
 
     def __init__(self, tasks, file, prior_hash, new_hash):
         self.occurred_at = datetime.now()
         self.tasks = tasks
-        self.file_name = file
+        self.file = file
         self.prior_hash = prior_hash
         self.new_hash = new_hash
 
+    def __str__(self):
+        return self.schema.dumps(self).data
+
+    def to_dict(self):
+        return self.schema.dump(self).data
+
 
 class TasksAdded(Event):
-    event_type = f"{__name__}.{__qualname__}"
+    pass
 
 
 class TasksUpdated(Event):
-    event_type = f"{__name__}.{__qualname__}"
+    pass
 
 
 class TasksDeleted(Event):
-    event_type = f"{__name__}.{__qualname__}"
+    pass
