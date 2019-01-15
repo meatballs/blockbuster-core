@@ -6,8 +6,9 @@ namespace.
 from abc import ABCMeta
 from datetime import datetime
 
-from blockbuster.core import DATE_FORMAT
 from marshmallow import Schema, fields, pre_dump
+
+from blockbuster.core import DATE_FORMAT
 
 
 class Task:
@@ -93,7 +94,7 @@ class Task:
 
 
 class EventSchema(Schema):
-    """A marshmallow schema to serialise and Event instance.
+    """A marshmallow schema to serialise an Event instance.
 
     The schema provides the the 'dump' and 'dumps' methods to serialise
     event objects to a Python dictionary and JSON string respectively.
@@ -115,7 +116,7 @@ class EventSchema(Schema):
 
 class Event:
     __metaclass__ = ABCMeta
-    schema = EventSchema()
+    schema = EventSchema(strict=True)
 
     def __init__(self, tasks, file, prior_hash, new_hash):
         self.occurred_at = datetime.now()
