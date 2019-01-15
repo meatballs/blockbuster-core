@@ -38,9 +38,7 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = (
-            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
-        )
+        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
         optional_suffixes = ""
 
         if self.done:
