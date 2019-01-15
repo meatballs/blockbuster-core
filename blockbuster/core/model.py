@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from blockbuster_core import DATE_FORMAT
+from blockbuster.core import DATE_FORMAT
 
 
 class Task:
@@ -25,7 +25,7 @@ class Task:
         self.tags = tags or {}
 
     def __repr__(self):
-        result = "blockbuster_core.model.Task("
+        result = "blockbuster.core.model.Task("
         result += f'description="{self.description}", '
         result += f"done={self.done}, "
         result += f'priority="{self.priority}", '
@@ -38,7 +38,9 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        minimal_text = (
+            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
+        )
         optional_suffixes = ""
 
         if self.done:
