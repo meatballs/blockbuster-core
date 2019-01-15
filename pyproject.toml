@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "blockbuster.core"
+name = "blockbuster"
 version = "0.0.1"
 description = ""
 authors = ["Owen Campbell"]
