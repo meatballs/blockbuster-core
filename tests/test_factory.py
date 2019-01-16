@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 import blockbuster.core.factory as factory
 from blockbuster.core.model import Task
@@ -33,8 +33,8 @@ def todotxt(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
@@ -57,8 +57,8 @@ def test_done(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
@@ -83,8 +83,8 @@ def test_dates(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
@@ -112,8 +112,8 @@ def test_projects(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
@@ -141,8 +141,8 @@ def test_contexts(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
@@ -170,8 +170,8 @@ def test_tags(
     description=text(min_size=1, alphabet=ALPHABET),
     done=sampled_from(("", "x")),
     priority=characters(whitelist_categories=("Lu",)),
-    completed_at=dates(),
-    created_at=dates(),
+    completed_at=dates(min_value=date(1111, 1, 1)),
+    created_at=dates(min_value=date(1111, 1, 1)),
     projects=lists(text(min_size=1, alphabet=ALPHABET)),
     contexts=lists(text(min_size=1, alphabet=ALPHABET)),
     tags=dictionaries(
