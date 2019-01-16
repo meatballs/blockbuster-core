@@ -6,9 +6,8 @@ namespace.
 from abc import ABCMeta
 from datetime import datetime
 
-from marshmallow import Schema, fields, pre_dump
-
 from blockbuster.core import DATE_FORMAT
+from marshmallow import Schema, fields, pre_dump
 
 
 class Task:
@@ -67,9 +66,7 @@ class Task:
 
     def __str__(self):
         optional_prefixes = ""
-        minimal_text = (
-            f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
-        )
+        minimal_text = f"{self.created_at.strftime(DATE_FORMAT)} {self.description}"
         optional_suffixes = ""
 
         if self.done:
@@ -93,11 +90,6 @@ class Task:
             optional_suffixes += f" {key}:{value}"
 
         return optional_prefixes + minimal_text + optional_suffixes
-
-
-def create_task(todotxt):
-    """Create a Task instance from a string in todo.txt format"""
-    raise NotImplementedError
 
 
 class EventSchema(Schema):
