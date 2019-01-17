@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "blockbuster"
-version = "0.0.1"
+version = "0.1.0"
 description = ""
 authors = ["Owen Campbell"]
 readme = "README.rst"
