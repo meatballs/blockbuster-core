@@ -73,8 +73,8 @@ def test_dates(
         description, done, priority, completed_at, created_at, projects, contexts, tags
     )
     result_dates, result_text = factory._dates(test_text)
-    assert result_dates["completed_at"] == completed_at.strftime("%Y-%m-%d")
-    assert result_dates["created_at"] == created_at.strftime("%Y-%m-%d")
+    assert result_dates["completed_at"] == completed_at
+    assert result_dates["created_at"] == created_at
     assert completed_at.strftime("%Y-%m-%d") not in result_text
     assert created_at.strftime("%Y-%m-%d") not in result_text
 
@@ -82,7 +82,7 @@ def test_dates(
 def test_dates_in_tags():
     test_text = "(A) Test Task 2019-01-01 due:2019-02-01"
     result_dates, result_text = factory._dates(test_text)
-    assert result_dates["created_at"] == "2019-01-01"
+    assert result_dates["created_at"] == datetime(2019, 1, 1).date()
     assert result_dates["completed_at"] is None
     assert result_text == "(A) Test Task  due:2019-02-01"
 
@@ -197,11 +197,19 @@ def test_create(
     assert isinstance(task, Task)
     assert task.done == (done == "x")
     assert task.priority == priority
-    assert task.completed_at == completed_at.strftime("%Y-%m-%d")
+    assert task.completed_at == completed_at
     if created_at is None:
-        assert task.created_at == datetime.now().date.strftime("%Y-%m-%d")
+        assert task.created_at == datetime.now().date()
     else:
-        assert task.created_at == created_at.strftime("%Y-%m-%d")
+        assert task.created_at == created_at
     assert task.description == description
     assert task.projects == projects
     assert task.contexts == contexts
+
+
+def test_create_with_date_tags():
+    test_text = "2019-01-01 Test Task +Project1 due:2019-02-01"
+    task = factory.create_task(test_text)
+    assert task.created_at == datetime(2019, 1, 1).date()
+    assert task.completed_at is None
+    assert task.tags == {"due": datetime(2019, 2, 1).date()}

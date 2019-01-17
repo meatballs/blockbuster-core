@@ -1,5 +1,6 @@
 """Functions to create a Task instance from text in todo.txt format"""
 import re
+from datetime import datetime
 
 from blockbuster.core.model import Task
 
@@ -36,17 +37,22 @@ def _priority(todotxt):
 
 
 def _dates(todotxt):
-    print(todotxt)
     regex = re.compile(r"(?<!\S)(\s*\d{4}-\d{2}-\d{2})")
     match = regex.search(todotxt)
     dates = {"completed_at": None, "created_at": None}
     if match:
         matches = [item for item in regex.finditer(todotxt)]
         if len(matches) == 2:
-            dates["completed_at"] = matches[0].group().strip()
-            dates["created_at"] = matches[1].group().strip()
+            dates["completed_at"] = datetime.strptime(
+                matches[0].group().strip(), "%Y-%m-%d"
+            ).date()
+            dates["created_at"] = datetime.strptime(
+                matches[1].group().strip(), "%Y-%m-%d"
+            ).date()
         else:
-            dates["created_at"] = matches[0].group().strip()
+            dates["created_at"] = datetime.strptime(
+                matches[0].group().strip(), "%Y-%m-%d"
+            ).date()
         todotxt = regex.sub("", todotxt).strip()
 
     return dates, todotxt
@@ -79,13 +85,23 @@ def _contexts(todotxt):
 
 
 def _tags(todotxt):
-    regex = re.compile(r"\s+(\w+\:\w+)")
+    regex = re.compile(r"\s+(\w+\:\S+)")
     match = regex.search(todotxt)
     tags = None
     if match:
         items = (item.group().strip() for item in regex.finditer(todotxt))
         tags = {item.split(":")[0]: item.split(":")[1] for item in items}
         todotxt = regex.sub("", todotxt).strip()
+
+    if tags:
+        tags = {
+            key: (
+                datetime.strptime(value, "%Y-%m-%d").date()
+                if re.match(r"\d{4}-\d{2}-\d{2}$", value)
+                else value
+            )
+            for key, value in tags.items()
+        }
 
     return tags, todotxt
 
