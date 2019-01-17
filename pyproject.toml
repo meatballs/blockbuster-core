@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "blockbuster-core"
+packages = [{include = "blockbuster"}]
 version = "0.1.0"
 description = ""
 authors = ["Owen Campbell"]
