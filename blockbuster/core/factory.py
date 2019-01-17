@@ -58,8 +58,7 @@ def _projects(todotxt):
     projects = None
     if match:
         projects = [
-            item.group().strip().lstrip("+")
-            for item in regex.finditer(todotxt)
+            item.group().strip().lstrip("+") for item in regex.finditer(todotxt)
         ]
         todotxt = regex.sub("", todotxt).strip()
 
@@ -72,8 +71,7 @@ def _contexts(todotxt):
     contexts = None
     if match:
         contexts = [
-            item.group().strip().lstrip("@")
-            for item in regex.finditer(todotxt)
+            item.group().strip().lstrip("@") for item in regex.finditer(todotxt)
         ]
         todotxt = regex.sub("", todotxt).strip()
 
