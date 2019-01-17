@@ -36,7 +36,8 @@ def _priority(todotxt):
 
 
 def _dates(todotxt):
-    regex = re.compile(r"\s*(\d{4}-\d{2}-\d{2})")
+    print(todotxt)
+    regex = re.compile(r"(?<!\:)\s*(\d{4}-\d{2}-\d{2})")
     match = regex.search(todotxt)
     dates = {"completed_at": None, "created_at": None}
     if match:
@@ -52,12 +53,13 @@ def _dates(todotxt):
 
 
 def _projects(todotxt):
-    regex = re.compile(r"\s*(\+\w+)")
+    regex = re.compile(r"\s+(\+\w+)")
     match = regex.search(todotxt)
     projects = None
     if match:
         projects = [
-            item.group().strip().lstrip("+") for item in regex.finditer(todotxt)
+            item.group().strip().lstrip("+")
+            for item in regex.finditer(todotxt)
         ]
         todotxt = regex.sub("", todotxt).strip()
 
@@ -70,7 +72,8 @@ def _contexts(todotxt):
     contexts = None
     if match:
         contexts = [
-            item.group().strip().lstrip("@") for item in regex.finditer(todotxt)
+            item.group().strip().lstrip("@")
+            for item in regex.finditer(todotxt)
         ]
         todotxt = regex.sub("", todotxt).strip()
 

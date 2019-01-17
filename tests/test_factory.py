@@ -16,7 +16,14 @@ ALPHABET = characters(whitelist_categories=("L", "N"))
 
 
 def todotxt(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     projects_txt = "".join([f" +{project}" for project in projects])
     contexts_txt = "".join([f" @{context}" for context in contexts])
@@ -43,10 +50,24 @@ def todotxt(
     ),
 )
 def test_done(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     result_done, result_text = factory._done(test_text)
     assert result_done == (done == "x")
@@ -67,16 +88,38 @@ def test_done(
     ),
 )
 def test_dates(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     result_dates, result_text = factory._dates(test_text)
     assert result_dates["completed_at"] == completed_at.strftime("%Y-%m-%d")
     assert result_dates["created_at"] == created_at.strftime("%Y-%m-%d")
     assert completed_at.strftime("%Y-%m-%d") not in result_text
     assert created_at.strftime("%Y-%m-%d") not in result_text
+
+
+def test_dates_in_tags():
+    test_text = "(A) Test Task 2019-01-01 due:2019-02-01"
+    result_dates, result_text = factory._dates(test_text)
+    assert result_dates["created_at"] == "2019-01-01"
+    assert result_dates["completed_at"] is None
+    assert result_text == "(A) Test Task due:2019-02-01"
 
 
 @given(
@@ -93,10 +136,24 @@ def test_dates(
     ),
 )
 def test_projects(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     result_projects, result_text = factory._projects(test_text)
     if projects:
@@ -122,10 +179,24 @@ def test_projects(
     ),
 )
 def test_contexts(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     result_contexts, result_text = factory._contexts(test_text)
     if contexts:
@@ -151,10 +222,24 @@ def test_contexts(
     ),
 )
 def test_tags(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     tags_text = "".join(f" {key}:{value}" for key, value in tags.items())
     result_tags, result_text = factory._tags(test_text)
@@ -180,10 +265,24 @@ def test_tags(
     ),
 )
 def test_create(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
+    description,
+    done,
+    priority,
+    completed_at,
+    created_at,
+    projects,
+    contexts,
+    tags,
 ):
     test_text = todotxt(
-        description, done, priority, completed_at, created_at, projects, contexts, tags
+        description,
+        done,
+        priority,
+        completed_at,
+        created_at,
+        projects,
+        contexts,
+        tags,
     )
     task = factory.create_task(test_text)
     assert isinstance(task, Task)
