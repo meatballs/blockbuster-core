@@ -84,7 +84,7 @@ def test_dates_in_tags():
     result_dates, result_text = factory._dates(test_text)
     assert result_dates["created_at"] == "2019-01-01"
     assert result_dates["completed_at"] is None
-    assert result_text == "(A) Test Task due:2019-02-01"
+    assert result_text == "(A) Test Task  due:2019-02-01"
 
 
 @given(

@@ -37,7 +37,7 @@ def _priority(todotxt):
 
 def _dates(todotxt):
     print(todotxt)
-    regex = re.compile(r"(?<!\:)\s*(\d{4}-\d{2}-\d{2})")
+    regex = re.compile(r"(?<!\S)(\s*\d{4}-\d{2}-\d{2})")
     match = regex.search(todotxt)
     dates = {"completed_at": None, "created_at": None}
     if match:
