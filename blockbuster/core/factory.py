@@ -123,12 +123,12 @@ def create_task(todotxt):
 
     task["done"], todotxt = _done(todotxt)
     task["priority"], todotxt = _priority(todotxt)
+    task["tags"], todotxt = _tags(todotxt)
+    task["projects"], todotxt = _projects(todotxt)
+    task["contexts"], todotxt = _contexts(todotxt)
     dates, todotxt = _dates(todotxt)
     task["completed_at"] = dates["completed_at"]
     task["created_at"] = dates["created_at"]
-    task["projects"], todotxt = _projects(todotxt)
-    task["contexts"], todotxt = _contexts(todotxt)
-    task["tags"], todotxt = _tags(todotxt)
     task["description"] = todotxt.strip()
 
     return Task(**task)
