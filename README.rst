@@ -23,10 +23,6 @@ Installation
 
     pip install blockbuster-core
 
-Usage
------
-It doesn't (yet) do anything at all!
-
 FAQ
 ---
 
