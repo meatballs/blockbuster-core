@@ -13,5 +13,5 @@ test_event_kwargs = {
 
 def test_events():
     event = Event(**test_event_kwargs)
-    keys = ["event_type", "tasks", "file", "prior_hash", "new_hash", "occurred_at"]
+    keys = list(test_event_kwargs.keys()) + ["occurred_at"]
     assert list(event.to_dict().keys()) == keys

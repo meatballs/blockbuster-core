@@ -71,7 +71,7 @@ class Task:
         return optional_prefixes + minimal_text + optional_suffixes
 
 
-@attr.s(auto_attribs=True, slots=True)
+@attr.s(auto_attribs=True, slots=True, frozen=True)
 class Event:
     event_type: str
     tasks: List[str]
