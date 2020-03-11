@@ -112,8 +112,6 @@ def _tags(todotxt):
     return tags, todotxt
 
 
-
-
 @attr.s(auto_attribs=True, slots=True)
 class Task:
     """ A class to represent a task
