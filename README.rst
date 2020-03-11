@@ -19,7 +19,9 @@ manage the tasks stored within those files.
 
 Installation
 ------------
-Sorry, there's nothing to install (yet)!
+::
+
+    pip install blockbuster-core
 
 Usage
 -----
