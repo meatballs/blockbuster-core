@@ -1,8 +1,7 @@
 """CRUD operations on todo.txt files"""
 from hashlib import sha256
 
-from blockbuster.core.factory import create_task
-from blockbuster.core.model import Event
+from blockbuster.core.model import Task, Event
 
 
 def read_tasks(file):
@@ -21,7 +20,7 @@ def read_tasks(file):
     with file.open("r") as f:
         tasks_raw = f.readlines()
 
-    return [create_task(todotxt) for todotxt in tasks_raw]
+    return [Task.from_todotxt(todotxt) for todotxt in tasks_raw]
 
 
 def add_tasks(additions, file):
