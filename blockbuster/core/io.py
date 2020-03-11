@@ -2,7 +2,7 @@
 from hashlib import sha256
 
 from blockbuster.core.factory import create_task
-from blockbuster.core.model import TasksAdded, TasksDeleted, TasksUpdated
+from blockbuster.core.model import Event
 
 
 def read_tasks(file):
@@ -46,8 +46,12 @@ def add_tasks(additions, file):
         f.seek(0)
         new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
 
-    return TasksAdded(
-        tasks=additions, file=file, prior_hash=prior_hash, new_hash=new_hash
+    return Event(
+        event_type="blockbuster.core.tasks_added",
+        tasks=additions,
+        file=file,
+        prior_hash=prior_hash,
+        new_hash=new_hash,
     )
 
 
@@ -79,8 +83,12 @@ def delete_tasks(deletions, file):
         f.seek(0)
         new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
     deleted_tasks = [tasks[i] for i in deletions]
-    return TasksDeleted(
-        tasks=deleted_tasks, file=file, prior_hash=prior_hash, new_hash=new_hash
+    return Event(
+        event_type="blockbuster.core.tasks_deleted",
+        tasks=deleted_tasks,
+        file=file,
+        prior_hash=prior_hash,
+        new_hash=new_hash,
     )
 
 
@@ -116,6 +124,10 @@ def update_tasks(updates, file):
         f.seek(0)
         new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
     updated_tasks = [value for value in updates.values()]
-    return TasksUpdated(
-        tasks=updated_tasks, file=file, prior_hash=prior_hash, new_hash=new_hash
+    return Event(
+        event_type="blockbuster.core.tasks_updated",
+        tasks=updated_tasks,
+        file=file,
+        prior_hash=prior_hash,
+        new_hash=new_hash,
     )

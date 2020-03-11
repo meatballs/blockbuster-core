@@ -1,8 +1,9 @@
 from pathlib import Path
 
-from blockbuster.core.model import TasksAdded, TasksDeleted, TasksUpdated
+from blockbuster.core.model import Event
 
 test_event_kwargs = {
+    "event_type": "test event",
     "tasks": ["task one", "task two"],
     "file": Path("directory_name", "file_name"),
     "prior_hash": "prior hash",
@@ -11,11 +12,6 @@ test_event_kwargs = {
 
 
 def test_events():
-    for event_class in [TasksAdded, TasksDeleted, TasksUpdated]:
-        event = event_class(**test_event_kwargs)
-        deserialised = eval(str(event))
-        keys = ["event_type", "occurred_at", "tasks", "file", "prior_hash", "new_hash"]
-        assert isinstance(deserialised, dict)
-        for key in keys:
-            assert key in deserialised
-            assert key in event.to_dict()
+    event = Event(**test_event_kwargs)
+    keys = ["event_type", "tasks", "file", "prior_hash", "new_hash", "occurred_at"]
+    assert list(event.to_dict().keys()) == keys

@@ -112,7 +112,7 @@ def test_projects(
         for project in projects:
             assert f"+{project}" not in result_text
     else:
-        assert result_projects is None
+        assert result_projects == []
         assert result_text == test_text
 
 
@@ -141,7 +141,7 @@ def test_contexts(
         for context in contexts:
             assert f"@{context}" not in result_text
     else:
-        assert result_contexts is None
+        assert result_contexts == []
         assert result_text == test_text
 
 
@@ -170,7 +170,7 @@ def test_tags(
         assert result_tags == tags
         assert tags_text not in result_tags
     else:
-        assert result_tags is None
+        assert result_tags == {}
         assert result_text == test_text
 
 

@@ -61,7 +61,7 @@ def _dates(todotxt):
 def _projects(todotxt):
     regex = re.compile(r"\s+(\+\w+)")
     match = regex.search(todotxt)
-    projects = None
+    projects = []
     if match:
         projects = [
             item.group().strip().lstrip("+") for item in regex.finditer(todotxt)
@@ -74,7 +74,7 @@ def _projects(todotxt):
 def _contexts(todotxt):
     regex = re.compile(r"\s+(\@\w+)")
     match = regex.search(todotxt)
-    contexts = None
+    contexts = []
     if match:
         contexts = [
             item.group().strip().lstrip("@") for item in regex.finditer(todotxt)
@@ -87,7 +87,7 @@ def _contexts(todotxt):
 def _tags(todotxt):
     regex = re.compile(r"\s+(\w+\:\S+)")
     match = regex.search(todotxt)
-    tags = None
+    tags = {}
     if match:
         items = (item.group().strip() for item in regex.finditer(todotxt))
         tags = {item.split(":")[0]: item.split(":")[1] for item in items}

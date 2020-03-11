@@ -3,16 +3,18 @@
 These classes have no dependencies on any other component of the blockbuster
 namespace.
 """
-from abc import ABCMeta
-from datetime import datetime
+from typing import Dict, List, Optional
+import datetime as dt
 
+import attr
 from blockbuster.core import DATE_FORMAT
-from marshmallow import Schema, fields, pre_dump
 
 
+@attr.s(auto_attribs=True, slots=True)
 class Task:
-    """
-    Parameters
+    """ A class to represent a task
+
+    Attributes
     ----------
     description:
         Text to describe the task
@@ -32,37 +34,14 @@ class Task:
         A dict of user defined tag keys and values
     """
 
-    def __init__(
-        self,
-        description,
-        done=False,
-        priority=None,
-        completed_at=None,
-        created_at=None,
-        projects=None,
-        contexts=None,
-        tags=None,
-    ):
-        self.description = description
-        self.done = done
-        self.priority = priority
-        self.completed_at = completed_at
-        self.created_at = created_at or datetime.now().date()
-        self.projects = projects or []
-        self.contexts = contexts or []
-        self.tags = tags or {}
-
-    def __repr__(self):
-        result = "blockbuster.core.model.Task("
-        result += f'description="{self.description}", '
-        result += f"done={self.done}, "
-        result += f'priority="{self.priority}", '
-        result += f"completed_at={repr(self.completed_at)}, "
-        result += f"created_at={repr(self.created_at)}, "
-        result += f"projects={self.projects}, "
-        result += f"contexts={self.contexts}, "
-        result += f"tags={self.tags})"
-        return result
+    description: str
+    done: bool = False
+    priority: Optional[str] = None
+    completed_at: Optional[dt.datetime.date] = None
+    created_at: dt.datetime.date = dt.datetime.now().date()
+    projects: List[str] = attr.Factory(list)
+    contexts: List[str] = attr.Factory(list)
+    tags: Dict = attr.Factory(dict)
 
     def __str__(self):
         optional_prefixes = ""
@@ -92,52 +71,14 @@ class Task:
         return optional_prefixes + minimal_text + optional_suffixes
 
 
-class EventSchema(Schema):
-    """A marshmallow schema to serialise an Event instance.
-
-    The schema provides the the 'dump' and 'dumps' methods to serialise
-    event objects to a Python dictionary and JSON string respectively.
-    """
-
-    event_type = fields.Str()
-    occurred_at = fields.DateTime()
-    tasks = fields.List(fields.Str())
-    file = fields.Str()
-    prior_hash = fields.Str()
-    new_hash = fields.Str()
-
-    @pre_dump
-    def add_event_type(self, item):
-        """Add the fully qualified name of the Event class to the object being serialised."""
-        item.event_type = f"{__name__}.{item.__class__.__qualname__}"
-        return item
-
-
+@attr.s(auto_attribs=True, slots=True)
 class Event:
-    __metaclass__ = ABCMeta
-    schema = EventSchema(strict=True)
-
-    def __init__(self, tasks, file, prior_hash, new_hash):
-        self.occurred_at = datetime.now()
-        self.tasks = tasks
-        self.file = file
-        self.prior_hash = prior_hash
-        self.new_hash = new_hash
-
-    def __str__(self):
-        return self.schema.dumps(self).data
+    event_type: str
+    tasks: List[str]
+    file: str
+    prior_hash: str
+    new_hash: str
+    occurred_at: dt.datetime = dt.datetime.now()
 
     def to_dict(self):
-        return self.schema.dump(self).data
-
-
-class TasksAdded(Event):
-    pass
-
-
-class TasksUpdated(Event):
-    pass
-
-
-class TasksDeleted(Event):
-    pass
+        return attr.asdict(self)

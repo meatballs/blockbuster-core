@@ -118,8 +118,8 @@ def test_completed_at_string(done, priority, completed_at, created_at, descripti
     created_at=dates(),
     description=text(min_size=1, alphabet=ALPHABET),
     projects=lists(text(min_size=1)),
-    contexts=sampled_from((None, "test_context")),
-    tags=sampled_from((None, {"test_key": "test_value"})),
+    contexts=lists(text(min_size=1)),
+    tags=dictionaries(keys=text(min_size=1), values=text(min_size=1)),
 )
 def test_projects_string(created_at, description, projects, contexts, tags):
     task = Task(
@@ -140,9 +140,9 @@ def test_projects_string(created_at, description, projects, contexts, tags):
 @given(
     created_at=dates(),
     description=text(min_size=1, alphabet=ALPHABET),
-    projects=sampled_from((None, "test_project")),
+    projects=lists(text()),
     contexts=lists(text(min_size=1)),
-    tags=sampled_from((None, {"test_key": "test_value"})),
+    tags=dictionaries(keys=text(min_size=1), values=text(min_size=1)),
 )
 def test_contexts_string(created_at, description, projects, contexts, tags):
     task = Task(
@@ -163,8 +163,8 @@ def test_contexts_string(created_at, description, projects, contexts, tags):
 @given(
     created_at=dates(),
     description=text(min_size=1, alphabet=ALPHABET),
-    projects=sampled_from((None, "test_project")),
-    contexts=sampled_from((None, "test_context")),
+    projects=lists(text()),
+    contexts=lists(text()),
     tags=dictionaries(keys=text(min_size=1), values=text(min_size=1)),
 )
 def test_tags_string(created_at, description, projects, contexts, tags):

@@ -9,7 +9,6 @@ license = "GPL-3.0"
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-marshmallow = "^2.18"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
