@@ -59,8 +59,6 @@ def test_repr(
         contexts=contexts,
         tags=tags,
     )
-    import blockbuster.core
-    import datetime
 
     assert isinstance(eval(repr(task)), Task)
 
