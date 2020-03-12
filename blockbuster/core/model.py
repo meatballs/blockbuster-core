@@ -34,8 +34,8 @@ class Task:
     description: str
     done: bool = False
     priority: Optional[str] = None
-    completed_at: Optional[dt.datetime.date] = None
-    created_at: dt.datetime.date = dt.datetime.now().date()
+    completed_at: Optional[dt.date] = None
+    created_at: dt.date = dt.datetime.now().date()
     projects: List[str] = attr.Factory(list)
     contexts: List[str] = attr.Factory(list)
     tags: Dict = attr.Factory(dict)
