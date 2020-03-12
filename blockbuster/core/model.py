@@ -3,8 +3,9 @@ import datetime as dt
 from typing import Dict, List, Optional
 
 import attr
-from blockbuster.core import DATE_FORMAT
 import blockbuster.core.parser as parser
+from blockbuster.core import DATE_FORMAT
+
 
 @attr.s(auto_attribs=True, slots=True)
 class Task:

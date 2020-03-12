@@ -1,6 +1,6 @@
 """Functions to parse a string in todo.txt format"""
-import re
 import datetime as dt
+import re
 
 
 def _done(todotxt):
