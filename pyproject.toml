@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "blockbuster-core"
 packages = [{include = "blockbuster"}]
-version = "0.3.0"
+version = "0.4.0"
 description = ""
 authors = ["Owen Campbell"]
 readme = "README.rst"
