@@ -14,7 +14,7 @@ from hypothesis.strategies import (
 )
 
 ALPHABET = characters(
-    blacklist_characters=('"', "+", "@", " "), blacklist_categories=("Cc", "Cs")
+    blacklist_characters=('"', "+", "@",), blacklist_categories=("Cc", "Cs", "Zs")
 )
 
 
@@ -34,33 +34,6 @@ def todotxt(
 
 def minimal_text(created_at, description):
     return f"{created_at.strftime('%Y-%m-%d')} {description}"
-
-
-@given(
-    description=text(min_size=1, alphabet=ALPHABET),
-    done=booleans(),
-    priority=ALPHABET,
-    completed_at=dates(),
-    created_at=dates(),
-    projects=lists(text(min_size=1)),
-    contexts=lists(text(min_size=1)),
-    tags=dictionaries(keys=text(min_size=1), values=text(min_size=1)),
-)
-def test_repr(
-    description, done, priority, completed_at, created_at, projects, contexts, tags
-):
-    task = Task(
-        description=description,
-        done=done,
-        priority=priority,
-        completed_at=completed_at,
-        created_at=created_at,
-        projects=projects,
-        contexts=contexts,
-        tags=tags,
-    )
-
-    assert isinstance(eval(repr(task)), Task)
 
 
 @given(created_at=dates(), description=text(min_size=1, alphabet=ALPHABET))
