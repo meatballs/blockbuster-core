@@ -1,5 +1,5 @@
-from typing import Iterable
 from pathlib import Path
+from typing import Iterable
 
 def read_tasks(file: Path): ...
 def add_tasks(additions: Iterable[str], file: Path): ...
