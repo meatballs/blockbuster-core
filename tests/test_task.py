@@ -1,6 +1,6 @@
+# pylint: disable=too-many-arguments
 from datetime import date, datetime
 
-import blockbuster.core.model as model
 from blockbuster.core.model import Task
 from hypothesis import given
 from hypothesis.strategies import (
