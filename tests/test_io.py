@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from blockbuster.core.io import add_tasks, delete_tasks, read_tasks, update_tasks
+import blockbuster.core.model as model
 from blockbuster.core.model import Task
 
 TEST_TASKS = [
@@ -23,7 +23,7 @@ def test_file(tmp_path):
 
 
 def test_read_tasks(test_file):
-    tasks = read_tasks(test_file)
+    tasks = model._read_tasks(test_file)
     assert len(tasks) == len(TEST_TASKS)
     for task in tasks:
         assert isinstance(task, Task)
@@ -32,7 +32,7 @@ def test_read_tasks(test_file):
 def test_add_tasks(test_file):
     expected_hash = "7c39ee8e93e03a4249a11cc6b28de4d6da9f66e648115a2a7db78e3b3b9bd7b6"
     tasks = ["task four", "task five"]
-    event = add_tasks(tasks, test_file)
+    event = model._add_tasks(tasks, test_file)
     with test_file.open("r") as f:
         data = f.readlines()
     assert len(data) == len(TEST_TASKS) + len(tasks)
@@ -46,7 +46,7 @@ def test_add_tasks(test_file):
 def test_delete_tasks(test_file):
     expected_hash = "949076372ee15f1b7ff7c6ec36a258b5a1b494f543ebf4b34eb3d5aa64d27f0b"
     to_delete = [0, 2]
-    event = delete_tasks(to_delete, test_file)
+    event = model._delete_tasks(to_delete, test_file)
     with test_file.open("r") as f:
         data = f.readlines()
     assert len(data) == len(TEST_TASKS) - len(to_delete)
@@ -63,7 +63,7 @@ def test_update_tasks(test_file):
         1: "2019-01-02 Task Two Updated +Project2 @Context2",
         2: "2019-03-05 Task Three +ProjectUpdated +Project2 @Context1",
     }
-    event = update_tasks(to_update, test_file)
+    event = model._update_tasks(to_update, test_file)
     with test_file.open("r") as f:
         data = f.readlines()
     assert len(data) == len(TEST_TASKS)
