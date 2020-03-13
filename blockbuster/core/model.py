@@ -1,4 +1,3 @@
-"""Classes to represent tasks and the events which cause them to change state."""
 import datetime as dt
 from typing import Dict, List, Optional
 
@@ -67,7 +66,7 @@ class Task:
             if context:
                 optional_suffixes += f" @{context}"
 
-        for key, value in self.tags.items():
+        for key, value in self.tags.items(): # pylint: disable=no-member
             optional_suffixes += f" {key}:{value}"
 
         return optional_prefixes + minimal_text + optional_suffixes
