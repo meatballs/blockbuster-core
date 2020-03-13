@@ -100,8 +100,8 @@ def _read_tasks(file):
     list
         of Task instances
     """
-    with file.open("r") as f:
-        tasks_raw = f.readlines()
+    with file.open("r") as reader:
+        tasks_raw = reader.readlines()
 
     return [Task.from_todotxt(todotxt) for todotxt in tasks_raw]
 
@@ -121,12 +121,12 @@ def _add_tasks(additions, file):
     TasksAdded
         An instance of blockbuster.core.model.Event
     """
-    with file.open("r+") as f:
-        prior_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
+    with file.open("r+") as read_writer:
+        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
         for task in additions:
-            f.write(f"{task}\n")
-        f.seek(0)
-        new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
+            read_writer.write(f"{task}\n")
+        read_writer.seek(0)
+        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
 
     return Event(
         event_type="blockbuster.core.tasks_added",
@@ -153,21 +153,20 @@ def _delete_tasks(deletions, file):
     TasksDeleted
         An instance of blockbuster.core.model.Event
     """
-    with file.open("r+") as f:
-        prior_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
-        f.seek(0)
-        tasks = f.readlines()
+    with file.open("r+") as read_writer:
+        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
+        read_writer.seek(0)
+        tasks = read_writer.readlines()
         keep_ids = [i for i in range(len(tasks)) if i not in deletions]
-        f.seek(0)
+        read_writer.seek(0)
         for task in [tasks[i] for i in keep_ids]:
-            f.write(task)
-        f.truncate()
-        f.seek(0)
-        new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
-    deleted_tasks = [tasks[i] for i in deletions]
+            read_writer.write(task)
+        read_writer.truncate()
+        read_writer.seek(0)
+        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
     return Event(
         event_type="blockbuster.core.tasks_deleted",
-        tasks=deleted_tasks,
+        tasks=[tasks[i] for i in deletions],
         file=file,
         prior_hash=prior_hash,
         new_hash=new_hash,
@@ -190,25 +189,24 @@ def _update_tasks(updates, file):
     TasksUpdated
         An instance of blockbuster.core.model.Event
     """
-    with file.open("r+") as f:
-        prior_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
-        f.seek(0)
-        tasks = f.readlines()
+    with file.open("r+") as read_writer:
+        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
+        read_writer.seek(0)
+        tasks = read_writer.readlines()
         new_tasks = [
             updates[item[0]] if item[0] in updates else tasks[item[0]]
             for item in enumerate(tasks)
         ]
         print(new_tasks)
-        f.seek(0)
+        read_writer.seek(0)
         for task in new_tasks:
-            f.write(f"{task.strip()}\n")
-        f.truncate()
-        f.seek(0)
-        new_hash = sha256(f.read().encode(encoding="UTF-8")).hexdigest()
-    updated_tasks = [value for value in updates.values()]
+            read_writer.write(f"{task.strip()}\n")
+        read_writer.truncate()
+        read_writer.seek(0)
+        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
     return Event(
         event_type="blockbuster.core.tasks_updated",
-        tasks=updated_tasks,
+        tasks=list(updates.values()),
         file=file,
         prior_hash=prior_hash,
         new_hash=new_hash,
