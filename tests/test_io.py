@@ -16,10 +16,11 @@ TEST_TASKS_HASH = "399a33976715eaacaa62f2d3ccd6b06882f64e69f4cd1eb946690c2a4d6c7
 
 @pytest.fixture(name="test_file")
 def _test_file(tmp_path):
-    with Path(tmp_path, "test_file").open("w") as file:
+    test_file = Path(tmp_path, "test_file")
+    with test_file.open("w") as file:
         for task in TEST_TASKS:
             file.write(f"{task}\n")
-    return file
+    return test_file
 
 
 def test_read_tasks(test_file):
