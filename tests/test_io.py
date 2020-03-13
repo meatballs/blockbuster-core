@@ -13,8 +13,8 @@ TEST_TASKS = [
 TEST_TASKS_HASH = "399a33976715eaacaa62f2d3ccd6b06882f64e69f4cd1eb946690c2a4d6c7b0e"
 
 
-@pytest.fixture
-def test_file(tmp_path):
+@pytest.fixture(name="test_file")
+def _test_file(tmp_path):
     file = Path(tmp_path, "test_file")
     with file.open("w") as f:
         for task in TEST_TASKS:
