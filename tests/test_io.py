@@ -1,7 +1,8 @@
+# pylint: disable=protected-access
 from pathlib import Path
 
-import pytest
 import blockbuster.core.model as model
+import pytest
 from blockbuster.core.model import Task
 
 TEST_TASKS = [
@@ -15,10 +16,9 @@ TEST_TASKS_HASH = "399a33976715eaacaa62f2d3ccd6b06882f64e69f4cd1eb946690c2a4d6c7
 
 @pytest.fixture(name="test_file")
 def _test_file(tmp_path):
-    file = Path(tmp_path, "test_file")
-    with file.open("w") as f:
+    with Path(tmp_path, "test_file").open("w") as file:
         for task in TEST_TASKS:
-            f.write(f"{task}\n")
+            file.write(f"{task}\n")
     return file
 
 
@@ -33,8 +33,8 @@ def test_add_tasks(test_file):
     expected_hash = "7c39ee8e93e03a4249a11cc6b28de4d6da9f66e648115a2a7db78e3b3b9bd7b6"
     tasks = ["task four", "task five"]
     event = model._add_tasks(tasks, test_file)
-    with test_file.open("r") as f:
-        data = f.readlines()
+    with test_file.open("r") as file:
+        data = file.readlines()
     assert len(data) == len(TEST_TASKS) + len(tasks)
     assert event.prior_hash == TEST_TASKS_HASH
     assert event.new_hash == expected_hash
@@ -47,8 +47,8 @@ def test_delete_tasks(test_file):
     expected_hash = "949076372ee15f1b7ff7c6ec36a258b5a1b494f543ebf4b34eb3d5aa64d27f0b"
     to_delete = [0, 2]
     event = model._delete_tasks(to_delete, test_file)
-    with test_file.open("r") as f:
-        data = f.readlines()
+    with test_file.open("r") as file:
+        data = file.readlines()
     assert len(data) == len(TEST_TASKS) - len(to_delete)
     assert event.prior_hash == TEST_TASKS_HASH
     assert event.new_hash == expected_hash
@@ -64,8 +64,8 @@ def test_update_tasks(test_file):
         2: "2019-03-05 Task Three +ProjectUpdated +Project2 @Context1",
     }
     event = model._update_tasks(to_update, test_file)
-    with test_file.open("r") as f:
-        data = f.readlines()
+    with test_file.open("r") as file:
+        data = file.readlines()
     assert len(data) == len(TEST_TASKS)
     assert event.prior_hash == TEST_TASKS_HASH
     assert event.new_hash == expected_hash
