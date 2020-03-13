@@ -1,10 +1,9 @@
+# pylint: disable=too-many-arguments, protected-access
 from datetime import date, datetime
 
 import blockbuster.core.parser as parser
-from blockbuster.core.model import Task
 from hypothesis import given
 from hypothesis.strategies import (
-    booleans,
     characters,
     dates,
     dictionaries,
