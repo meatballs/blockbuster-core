@@ -1,4 +1,6 @@
 import pytest
+from pathlib import Path
+
 
 @pytest.fixture
 def test_tasks():
@@ -8,6 +10,16 @@ def test_tasks():
         "2019-03-05 Task Three +Project1 +Project2 @Context1",
     ]
 
+
 @pytest.fixture
 def test_tasks_hash():
     return "4ef27c088837256efa400ddf45ba934a2f62125b2ecb83a4cdc468696c1208f8"
+
+
+@pytest.fixture(name="test_file")
+def _test_file(tmp_path, test_tasks):
+    test_file = Path(tmp_path, "test_file")
+    with test_file.open("w") as file:
+        file.write("\n".join(test_tasks))
+    return test_file
+
