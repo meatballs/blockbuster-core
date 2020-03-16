@@ -1,4 +1,4 @@
-def _add_tasks(additions, file):
+def add_tasks(additions, file):
     """Add tasks to a todo.txt file
 
     Parameters
@@ -20,7 +20,7 @@ def _add_tasks(additions, file):
     return tasks
 
 
-def _delete_tasks(deletions, file):
+def delete_tasks(deletions, file):
     """Delete lines from a todo.txt file
 
     Parameters
@@ -48,7 +48,7 @@ def _delete_tasks(deletions, file):
     return tasks
 
 
-def _update_tasks(updates, file):
+def update_tasks(updates, file):
     """Update lines in a todo.txt file
 
     Parameters
