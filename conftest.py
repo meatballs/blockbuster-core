@@ -23,3 +23,18 @@ def _test_file(tmp_path, test_tasks):
         file.write("\n".join(test_tasks))
     return test_file
 
+
+@pytest.fixture
+def additions():
+    return ["task four", "task five"]
+
+
+@pytest.fixture
+def updates():
+    return {
+        1: "2019-01-02 Task Two Updated +Project2 @Context2",
+        2: "2019-03-05 Task Three +ProjectUpdated +Project2 @Context1",
+    }
+@pytest.fixture
+def deletions():
+    return [0, 2]
