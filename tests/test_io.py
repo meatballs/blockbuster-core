@@ -11,15 +11,13 @@ TEST_TASKS = [
     "2019-03-05 Task Three +Project1 +Project2 @Context1",
 ]
 
-TEST_TASKS_HASH = "399a33976715eaacaa62f2d3ccd6b06882f64e69f4cd1eb946690c2a4d6c7b0e"
-
+TEST_TASKS_HASH = "4ef27c088837256efa400ddf45ba934a2f62125b2ecb83a4cdc468696c1208f8"
 
 @pytest.fixture(name="test_file")
 def _test_file(tmp_path):
     test_file = Path(tmp_path, "test_file")
     with test_file.open("w") as file:
-        for task in TEST_TASKS:
-            file.write(f"{task}\n")
+        file.write("\n".join(TEST_TASKS))
     return test_file
 
 
@@ -31,7 +29,7 @@ def test_read_tasks(test_file):
 
 
 def test_add_tasks(test_file):
-    expected_hash = "7c39ee8e93e03a4249a11cc6b28de4d6da9f66e648115a2a7db78e3b3b9bd7b6"
+    expected_hash = "697547c610e44cb34a18e239a223d0a0d2aa4137eb7fb9dac5016cdcf39c1403"
     tasks = ["task four", "task five"]
     event = model._add_tasks(tasks, test_file)
     with test_file.open("r") as file:
@@ -59,7 +57,7 @@ def test_delete_tasks(test_file):
 
 
 def test_update_tasks(test_file):
-    expected_hash = "f624df388a8e77dd16dc597c028062fb718ef29840948e7a241a1311a57aa521"
+    expected_hash = "b19ccf6c81f9b9fd3335f8b27d5e2e6fa80c691fbe7d0a1cf1d1d04ca5e96b53"
     to_update = {
         1: "2019-01-02 Task Two Updated +Project2 @Context2",
         2: "2019-03-05 Task Three +ProjectUpdated +Project2 @Context1",
