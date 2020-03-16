@@ -2,7 +2,6 @@ import datetime as dt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-
 class Task:
     description: str
     done: bool = ...

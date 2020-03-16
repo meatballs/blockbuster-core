@@ -1,5 +1,6 @@
-import pytest
 from pathlib import Path
+
+import pytest
 
 
 @pytest.fixture
@@ -35,6 +36,8 @@ def updates():
         1: "2019-01-02 Task Two Updated +Project2 @Context2",
         2: "2019-03-05 Task Three +ProjectUpdated +Project2 @Context1",
     }
+
+
 @pytest.fixture
 def deletions():
     return [0, 2]

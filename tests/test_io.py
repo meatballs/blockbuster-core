@@ -1,5 +1,6 @@
 import blockbuster.core.io as io
 
+
 def test_add_tasks(additions, test_file, test_tasks):
     new_tasks = io.add_tasks(additions, test_file)
     assert len(new_tasks) == len(test_tasks) + len(additions)
