@@ -70,7 +70,6 @@ def _update_tasks(updates, file):
             updates[item[0]] if item[0] in updates else tasks[item[0]]
             for item in enumerate(tasks)
         ]
-        print(("\n".join([task.strip() for task in new_tasks])))
         read_writer.seek(0)
         read_writer.seek(0)
         read_writer.write("\n".join([task.strip() for task in new_tasks]))
