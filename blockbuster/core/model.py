@@ -4,8 +4,15 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import attr
+import blockbuster.core.io as io
 import blockbuster.core.parser as parser
-from blockbuster.core import DATE_FORMAT
+from blockbuster.core import (
+    DATE_FORMAT,
+    FILE_READ,
+    TASKS_ADDED,
+    TASKS_DELETED,
+    TASKS_UPDATED,
+)
 
 
 @attr.s(auto_attribs=True, slots=True)
@@ -77,140 +84,18 @@ class Task:
 @attr.s(auto_attribs=True, slots=True, frozen=True)
 class Event:
     event_type: str
-    tasks: List[str]
     file: str
     prior_hash: str
     new_hash: str
+    tasks: List[str] = attr.Factory(list)
     occurred_at: dt.datetime = dt.datetime.now()
 
     def to_dict(self):
         return attr.asdict(self)
 
 
-def _read_tasks(file):
-    """Create Tasks instances from a todo.txt file
-
-    Parameters
-    ----------
-    file
-        A Path instance
-
-    Returns
-    -------
-    list
-        of Task instances
-    """
-    with file.open("r") as reader:
-        tasks_raw = reader.readlines()
-
-    return [Task.from_todotxt(todotxt) for todotxt in tasks_raw]
-
-
-def _add_tasks(additions, file):
-    """Add tasks to a todo.txt file
-
-    Parameters
-    ----------
-    additions
-        A list or tuple of strings in todo.txt format
-    file
-        A Path instance
-
-    Returns
-    -------
-    TasksAdded
-        An instance of blockbuster.core.model.Event
-    """
-    with file.open("r+") as read_writer:
-        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-        for task in additions:
-            read_writer.write(f"{task}\n")
-        read_writer.seek(0)
-        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-
-    return Event(
-        event_type="blockbuster.core.tasks_added",
-        tasks=additions,
-        file=file,
-        prior_hash=prior_hash,
-        new_hash=new_hash,
-    )
-
-
-def _delete_tasks(deletions, file):
-    """Delete lines from a todo.txt file
-
-    Parameters
-    ----------
-    deletions
-        A list or tuple of index numbers indicating which tasks to delete by
-        their position in the file
-    file
-        A Path instance
-
-    Returns
-    -------
-    TasksDeleted
-        An instance of blockbuster.core.model.Event
-    """
-    with file.open("r+") as read_writer:
-        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-        read_writer.seek(0)
-        tasks = read_writer.readlines()
-        keep_ids = [i for i in range(len(tasks)) if i not in deletions]
-        read_writer.seek(0)
-        for task in [tasks[i] for i in keep_ids]:
-            read_writer.write(task)
-        read_writer.truncate()
-        read_writer.seek(0)
-        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-    return Event(
-        event_type="blockbuster.core.tasks_deleted",
-        tasks=[tasks[i] for i in deletions],
-        file=file,
-        prior_hash=prior_hash,
-        new_hash=new_hash,
-    )
-
-
-def _update_tasks(updates, file):
-    """Update lines in a todo.txt file
-
-    Parameters
-    ----------
-    updates
-        A dictionary mapping the index number of the task within the file to
-        a string of its updated content
-    file
-        A Path instance
-
-    Returns
-    -------
-    TasksUpdated
-        An instance of blockbuster.core.model.Event
-    """
-    with file.open("r+") as read_writer:
-        prior_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-        read_writer.seek(0)
-        tasks = read_writer.readlines()
-        new_tasks = [
-            updates[item[0]] if item[0] in updates else tasks[item[0]]
-            for item in enumerate(tasks)
-        ]
-        print(new_tasks)
-        read_writer.seek(0)
-        for task in new_tasks:
-            read_writer.write(f"{task.strip()}\n")
-        read_writer.truncate()
-        read_writer.seek(0)
-        new_hash = sha256(read_writer.read().encode(encoding="UTF-8")).hexdigest()
-    return Event(
-        event_type="blockbuster.core.tasks_updated",
-        tasks=list(updates.values()),
-        file=file,
-        prior_hash=prior_hash,
-        new_hash=new_hash,
-    )
+def _tasks_hash(tasks):
+    return sha256("\n".join(tasks).encode("UTF-8")).hexdigest()
 
 
 @attr.s(auto_attribs=True, slots=True)
@@ -223,7 +108,60 @@ class TaskList:
         the todo.txt file
     tasks :  list or tuple
         of Task instances representing the file contents
+    tasks_hash : str
+        sha256 hash of the tasks content
+    log : List
+        of Event instances
     """
 
     file: Path
-    tasks: List[Task]
+    tasks: List[Task] = attr.Factory(list)
+    tasks_hash: str = attr.Factory(str)
+    log: List[Event] = attr.Factory(list)
+
+    @classmethod
+    def from_file(cls, file):
+        task = cls(file=file)
+        task.read_file()
+        return task
+
+    def read_file(self):
+        prior_hash = self.tasks_hash
+        with self.file.open("r") as reader:
+            tasks_raw = reader.readlines()
+        self.tasks = [Task.from_todotxt(todotxt) for todotxt in tasks_raw]
+        self.tasks_hash = _tasks_hash([str(task) for task in self.tasks])
+        return Event(
+            event_type=FILE_READ,
+            file=self.file,
+            prior_hash=prior_hash,
+            new_hash=self.tasks_hash,
+        )
+
+    def _change_tasks(self, event_type, changes):
+        actions = {
+            TASKS_ADDED: io.add_tasks,
+            TASKS_DELETED: io.delete_tasks,
+            TASKS_UPDATED: io.update_tasks,
+        }
+        prior_hash = self.tasks_hash
+        actions[event_type](changes, self.file)
+        event = Event(
+            event_type=event_type,
+            tasks=changes,
+            file=self.file,
+            prior_hash=prior_hash,
+            new_hash=self.tasks_hash,
+        )
+        self.log.append(event)  # pylint: disable=no-member
+        self.read_file()
+        return event
+
+    def add_tasks(self, additions):
+        return self._change_tasks(TASKS_ADDED, additions)
+
+    def delete_tasks(self, deletions):
+        return self._change_tasks(TASKS_DELETED, deletions)
+
+    def update_tasks(self, updates):
+        return self._change_tasks(TASKS_UPDATED, updates)
