@@ -13,11 +13,11 @@ def add_tasks(additions, file):
     list
         of the tasks in the file after the addition has been made
     """
-    with file.open("r+") as read_writer:
+    with file.open("a+") as read_writer:
         read_writer.write("\n" + "\n".join(list(additions)))
         read_writer.seek(0)
         tasks = read_writer.readlines()
-    return tasks
+    return [task.strip() for task in tasks]
 
 
 def delete_tasks(deletions, file):
@@ -45,7 +45,7 @@ def delete_tasks(deletions, file):
         read_writer.truncate()
         read_writer.seek(0)
         tasks = read_writer.readlines()
-    return tasks
+    return [task.strip() for task in tasks]
 
 
 def update_tasks(updates, file):
@@ -76,4 +76,4 @@ def update_tasks(updates, file):
         read_writer.truncate()
         read_writer.seek(0)
         tasks = read_writer.readlines()
-    return tasks
+    return [task.strip() for task in tasks]
