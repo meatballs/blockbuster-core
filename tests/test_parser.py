@@ -13,7 +13,7 @@ from hypothesis.strategies import (
 )
 
 ALPHABET = characters(
-    blacklist_characters=('"', "+", "@",), blacklist_categories=("Cc", "Cs", "Zs")
+    blacklist_characters=('"', "+", "@",), blacklist_categories=("Cc", "Cs", "Z")
 )
 
 
