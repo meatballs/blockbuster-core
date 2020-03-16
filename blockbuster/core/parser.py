@@ -44,9 +44,9 @@ def _dates(todotxt):
     """
     regex = re.compile(r"(?<!\S)(\s*\d{4}-\d{2}-\d{2})")
     match = regex.search(todotxt)
-    dates = {"completed_at": None, "created_at": None}
+    dates = {"completed_at": None, "created_at": dt.datetime.now()}
     if match:
-        matches = [item for item in regex.finditer(todotxt)]
+        matches = list(regex.finditer(todotxt))
         if len(matches) == 2:
             dates["completed_at"] = dt.datetime.strptime(
                 matches[0].group().strip(), "%Y-%m-%d"
