@@ -122,6 +122,7 @@ class TaskList:
     @classmethod
     def from_file(cls, file):
         task = cls(file=file)
+        file.touch()
         task.read_file()
         return task
 
