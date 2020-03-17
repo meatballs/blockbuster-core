@@ -23,13 +23,14 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install poetry
+        poetry env use system
         poetry install
 
     - name: Lint code
       run: |
-        python -m isort --recursive --check-only .
-        python -m black --check .
-        python -m doc8 --quiet docs
+        isort --recursive --check-only .
+        black --check .
+        doc8 --quiet docs
         
     - name: Run tests
       run: |
