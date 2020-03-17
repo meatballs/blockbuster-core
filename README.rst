@@ -1,6 +1,3 @@
-.. image:: https://coveralls.io/repos/github/meatballs/blockbuster-core/badge.svg?branch=master
-  :target: https://coveralls.io/github/meatballs/blockbuster-core?branch=master
-
 .. image:: https://github.com/meatballs/blockbuster-core/workflows/CI/badge.svg
 
 ================
