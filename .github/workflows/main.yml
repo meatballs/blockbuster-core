@@ -19,20 +19,35 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
+    - name: Install Poetry
+      uses: dschep/install-poetry-action@v1.2
+
+    - name: Cache Poetry virtualenv
+      uses: actions/cache@v1
+      id: cache
+      with:
+        path: ~/.virtualenvs
+        key: poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          poetry-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Set Poetry config
       run: |
-        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-        poetry install
+        poetry config settings.virtualenvs.in-project false
+        poetry config settings.virtualenvs.path ~/.virtualenvs
+
+    - name: Install dependencies
+      run:  poetry install
 
     - name: Lint code
       run: |
-        isort --recursive --check-only .
-        black --check .
-        doc8 --quiet docs
+        poetry run isort --recursive --check-only .
+        poetry run black --check .
+        poetry run doc8 --quiet docs
         
     - name: Run tests
       run: |
-        pytest
+        poetry run pytest
         
     - name: Build docs
       run: |
