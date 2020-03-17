@@ -132,12 +132,14 @@ class TaskList:
             tasks_raw = reader.readlines()
         self.tasks = [Task.from_todotxt(todotxt) for todotxt in tasks_raw]
         self.tasks_hash = _tasks_hash([str(task) for task in self.tasks])
-        return Event(
+        event = Event(
             event_type=FILE_READ,
             file=self.file,
             prior_hash=prior_hash,
             new_hash=self.tasks_hash,
         )
+        self.log.append(event)  # pylint: disable=no-member
+        return event
 
     def _change_tasks(self, event_type, changes):
         actions = {
