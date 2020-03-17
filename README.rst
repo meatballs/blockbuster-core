@@ -6,13 +6,6 @@ Blockbuster Core
 A Python interface (API) to `todo.txt <https://github.com/todotxt/todo.txt>`_
 files.
 
-Introduction
-------------
-This library will form the basis for several todo list management applications.
-
-It will provide the interface to the underlying todo.txt files and functions to
-manage the tasks stored within those files.
-
 Installation
 ------------
 ::
