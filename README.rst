@@ -35,6 +35,6 @@ It's a reference to the `1973 chart topping hit <https://www.youtube.com/watch?v
 by `The Sweet <https://en.wikipedia.org/wiki/The_Sweet>`_.
 
 The song includes a line that was screamed incessantly by those of us on a UK
-school playground that year to the constant irritation of our teachers:
+school playground around that time (to the constant irritation of our teachers):
 
   "We just haven't got a clue what to do!"
